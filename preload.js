@@ -7,6 +7,8 @@
  * https://www.electronjs.org/docs/latest/tutorial/sandbox
  */
 
+const { ipcRenderer } = require('electron')
+
 console.log('preload.js')
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -20,4 +22,23 @@ window.addEventListener('DOMContentLoaded', () => {
   for (const type of ['chrome', 'node', 'electron']) {
     replaceText(`${type}-version`, process.versions[type])
   }
+
+  document.addEventListener('click', (event) => {
+    let target = event.target
+    if (target && target.href && target.href.indexOf('.xuxiaowei.com.cn') !== -1) {
+      const npmPackageName = `${process.env.npm_package_name || process.env.__CFBundleIdentifier}`.replace('cn.com.xuxiaowei.', '')
+      const npmPackageNameSplit = npmPackageName.split('-')
+      const npmPackageNameSplitLength = npmPackageNameSplit.length
+      event.preventDefault()
+      if (npmPackageNameSplitLength === 2) {
+        const domain = `kubernetes-${npmPackageNameSplit[1].replace('.', '-')}.xuxiaowei.com.cn`
+        if (target.href.indexOf(domain) !== -1) {
+          window.location.reload()
+        } else {
+          const url = `https://github.com/xuxiaowei-io/${new URL(target.href).host.split('.')[0].replace('kubernetes-v1-', 'kubernetes-website-1.')}/releases`
+          ipcRenderer.send('open-external', url)
+        }
+      }
+    }
+  })
 })
