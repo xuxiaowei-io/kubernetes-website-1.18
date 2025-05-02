@@ -1,5 +1,6 @@
 {
   "name": "kubernetes-v1.18",
+  "description": "Kubernetes v1.18 离线文档",
   "version": "1.18.21",
   "type": "module",
   "author": {
