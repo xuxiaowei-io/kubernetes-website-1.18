@@ -35,7 +35,11 @@ window.addEventListener('DOMContentLoaded', () => {
         if (target.href.indexOf(domain) !== -1) {
           window.location.reload()
         } else {
-          const url = `https://github.com/xuxiaowei-io/${new URL(target.href).host.split('.')[0].replace('kubernetes-v1-', 'kubernetes-website-1.')}/releases`
+          let projectName = new URL(target.href).host.split('.')[0].replace('kubernetes-v1-', 'kubernetes-website-1.')
+          if (projectName === 'kubernetes') {
+            projectName = 'kubernetes-website'
+          }
+          const url = `https://github.com/xuxiaowei-io/${projectName}/releases`
           ipcRenderer.send('open-external', url)
         }
       }
